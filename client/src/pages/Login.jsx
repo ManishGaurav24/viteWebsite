@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useAuth } from "../store/auth";
 
 export const Login = () => {
 
@@ -6,6 +7,8 @@ export const Login = () => {
     email:"",
     password:"",
   });
+
+  const {storeTokenInLS} = useAuth();
 
   const URL = "http://localhost:5000/api/auth/login";
   const handleInput = (e) => {
@@ -30,6 +33,8 @@ export const Login = () => {
         body:JSON.stringify(user),
       });
       if(response.ok){
+        const res_data = await response.json();
+        storeTokenInLS(res_data.token);
         setUser({email:"",password:""});
       }
       console.log(response);
